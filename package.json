@@ -1,0 +1,17 @@
+{
+  "name": "searchable-svg-generator",
+  "version": "1.0.0",
+  "private": true,
+  "license": "CC0-1.0",
+  "author": "hata6502",
+  "type": "module",
+  "scripts": {
+    "build": "npx tailwindcss -i src/doc.css -o docs/doc.css --minify",
+    "start": "http-server -c-1 docs"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.15",
+    "http-server": "^14.1.1",
+    "tailwindcss": "^3.4.17"
+  }
+}

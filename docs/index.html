@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        connect-src
+          'self'
+          https://us-central1-searchable-image.cloudfunctions.net
+        ;
+        img-src 'self' blob: https://i.gyazo.com;
+        style-src
+          'self'
+          'unsafe-inline'
+          https://cdn.jsdelivr.net/npm/searchable-image@1.0.4/docs/index.css
+        ;
+      "
+    />
+
+    <meta
+      name="description"
+      content="This Web Component enables users to search for and select text within images"
+    />
+    <meta
+      property="og:image"
+      content="https://searchable-image.hata6502.com/favicon.png"
+    />
+    <meta property="og:title" content="Searchable Image" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://searchable-image.hata6502.com/" />
+    <meta name="twitter:card" content="summary" />
+
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link href="doc.css" rel="stylesheet" />
+
+    <script type="module" src="index.js"></script>
+
+    <title>Searchable Image</title>
+  </head>
+  <body class="bg-white mx-auto max-w-4xl mt-16 mb-16 px-8">
+    <h1
+      class="flex flex-col-reverse items-center gap-4 break-keep break-words font-bold text-5xl md:flex-row"
+    >
+      Searchable Image
+      <img src="/favicon.png" class="w-20" />
+    </h1>
+
+    <article class="prose mt-8">
+      <p>
+        This Web Component enables users to search for and select text within
+        images.
+      </p>
+      <p>
+        By using this component, textual information embedded in an image can be
+        exposed to the DOM, making it possible for users to perform text
+        searches or copy text in much the same way as they would with normal
+        text content.
+      </p>
+      <p>
+        Example:
+        <s-img
+          alt="A signboard explaining how to eat udon with soup"
+          src="https://i.gyazo.com/90c26684de8d626ab8fc390e5e1bf8c6.jpg"
+          ><span slot="texts">
+            <s-text x="271" y="143" width="175" height="39">How to</s-text>
+            <s-text x="473" y="141" width="299" height="39">eat UDON ?</s-text>
+            <s-text x="287" y="210" width="477" height="22"
+              >UDON SERVED WITH DIPPING SAUCE</s-text
+            >
+            <s-text x="269" y="247" width="542" height="18"
+              >Put all the condiments (ginger&amp; shallot&amp; sesame) in the
+              site</s-text
+            >
+            <s-text x="237" y="279" width="16" height="17">2</s-text>
+            <s-text x="272" y="279" width="501" height="17"
+              >Pick up a few strands of noodles and dip them in the s</s-text
+            >
+            <s-text x="273" y="304" width="263" height="15"
+              >Dip tempura in the sauce,too.</s-text
+            >
+            <s-text x="558" y="341" width="20" height="13">(2)</s-text>
+            <s-text x="765" y="373" width="57" height="12">ENJOY !</s-text>
+            <s-text x="331" y="486" width="390" height="22"
+              >UDON SERVED IN DASHI SOUP</s-text
+            >
+            <s-text x="210" y="516" width="632" height="22"
+              >Everything is already in the soup. You can dip tempura in the
+              soup,too.</s-text
+            >
+            <s-text x="642" y="577" width="66" height="14">ENJOY !</s-text>
+          </span></s-img
+        >
+      </p>
+      <p>
+        For more details and source code, please see the GitHub repository:<br />
+        <a href="https://github.com/hata6502/searchable-image" target="_blank">
+          GitHub - hata6502/searchable-image
+        </a>
+      </p>
+
+      <section id="installation">
+        <h2>Installation</h2>
+        <p>
+          To use this Web Component, simply include the following script in your
+          <code>&lt;head&gt;</code> section:
+        </p>
+        <pre>
+&lt;script type="module" src="https://cdn.jsdelivr.net/npm/searchable-image@1.0.4/docs/index.js"&gt;&lt;/script&gt;</pre
+        >
+      </section>
+
+      <section id="tool">
+        <h2>Online OCR Tool</h2>
+
+        <form id="ocr-form">
+          <input id="file-input" type="file" accept="image/*" /><br />
+
+          <button
+            id="submit-button"
+            type="submit"
+            class="mt-4 rounded-md bg-neutral-900 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
+          >
+            Convert
+          </button>
+
+          <div id="result" class="mt-4"></div>
+        </form>
+      </section>
+
+      <section id="terminology">
+        <h2>Terminology</h2>
+        <dl>
+          <dt>Searchable Image</dt>
+          <dd>
+            The overall mechanism provided by this Web Component for making text
+            in images searchable.
+          </dd>
+          <dt>OCR (Optical Character Recognition)</dt>
+          <dd>
+            A technology that recognizes text from images and converts it into
+            machine-readable data.
+          </dd>
+        </dl>
+      </section>
+
+      <section id="overview">
+        <h2>Web Component Overview</h2>
+        <p>
+          The <code>&lt;s-img&gt;</code> element manages a single image along
+          with any text elements that represent text regions within that image.
+          Its key features include:
+        </p>
+        <ul>
+          <li>
+            A structure similar to the standard <code>&lt;img&gt;</code> element
+            for placing images.
+          </li>
+          <li>
+            Utilizing child elements (<code>&lt;s-text&gt;</code>, etc.) to
+            define text regions, allowing text data to exist in the DOM and be
+            searchable and copyable.
+          </li>
+        </ul>
+      </section>
+
+      <section id="element-definition">
+        <h2>Element Definitions</h2>
+
+        <h3><code>&lt;s-img&gt;</code> Element</h3>
+        <p>
+          The <code>&lt;s-img&gt;</code> element supports attributes like
+          <code>src</code> and <code>alt</code>, and provides a slot for
+          defining text regions within the image.
+        </p>
+
+        <h3><code>&lt;s-text&gt;</code> Element</h3>
+        <p>
+          The <code>&lt;s-text&gt;</code> element specifies a text region within
+          the image, along with the corresponding textual content. The following
+          attributes are defined:
+        </p>
+        <ul>
+          <li>
+            <strong>x</strong>: The left (x) coordinate of the text region in
+            pixels.
+          </li>
+          <li>
+            <strong>y</strong>: The top (y) coordinate of the text region in
+            pixels.
+          </li>
+          <li>
+            <strong>width</strong>: The width of the text region in pixels.
+          </li>
+          <li>
+            <strong>height</strong>: The height of the text region in pixels.
+          </li>
+        </ul>
+        <p>The actual text is placed inside the element as text content.</p>
+
+        <p>
+          Below is a basic example of how to mark up an image with text
+          elements:
+        </p>
+        <pre>
+&lt;s-img src="example.jpg" alt="Sample Image"&gt;
+  &lt;span slot="texts"&gt;
+    &lt;s-text x="100" y="50" width="200" height="30"&gt;Sample Text&lt;/s-text&gt;
+    &lt;!-- Add more &lt;s-text&gt; elements as needed --&gt;
+  &lt;/span&gt;
+&lt;/s-img&gt;</pre
+        >
+      </section>
+
+      <section id="use-cases">
+        <h2>Use Cases</h2>
+        <p>
+          This Web Component can be especially effective in the following
+          situations:
+        </p>
+        <ul>
+          <li>
+            <strong
+              >Documentation pages that use screenshots of diagrams or
+              tables</strong
+            ><br />
+            Text within these screenshots can also be included in searchable
+            content.
+          </li>
+          <li>
+            <strong
+              >Tutorial or guide pages relying heavily on screenshots</strong
+            ><br />
+            Even if UI labels or instructions are embedded in the image, users
+            can quickly find the information they need through built-in text
+            search.
+          </li>
+          <li>
+            <strong>Landing pages with many infographics</strong><br />
+            By placing images easily and enabling text search, it can greatly
+            improve user convenience.
+          </li>
+        </ul>
+      </section>
+    </article>
+
+    <footer class="mt-16">
+      <p class="text-xs leading-5 text-gray-500">
+        2025&nbsp;
+        <a
+          href="https://twitter.com/hata6502"
+          target="_blank"
+          class="hover:text-gray-600"
+        >
+          hata6502
+        </a>
+      </p>
+    </footer>
+
+    <script type="module" src="doc.js"></script>
+  </body>
+</html>
