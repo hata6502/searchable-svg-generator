@@ -1,13 +1,13 @@
 const fileInput = document.querySelector("#file-input");
-const submitButton = document.querySelector("#submit-button");
+const ocrForm = document.querySelector("#ocr-form");
 const result = document.querySelector("#result");
+const submitButton = document.querySelector("#submit-button");
 
-const ocrForm = document.getElementById("ocr-form");
 ocrForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   submitButton.disabled = true;
-  submitButton.textContent = "Converting...";
+  submitButton.textContent = "Generating...";
   try {
     const file = fileInput.files[0];
     if (!file) {
@@ -26,14 +26,25 @@ ocrForm.addEventListener("submit", async (event) => {
       fileReader.readAsDataURL(file);
     });
 
+    const href = URL.createObjectURL(file);
+
+    const image = new Image();
+    image.src = href;
+    await image.decode();
+
     const response = await fetch(
-      "https://us-central1-searchable-image.cloudfunctions.net/ocr",
+      "https://ocr-162013450789.us-central1.run.app",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ image: dataURL.split(",")[1] }),
+        body: JSON.stringify({
+          href,
+          image: dataURL.split(",")[1],
+          width: image.naturalWidth,
+          height: image.naturalHeight,
+        }),
       }
     );
     if (!response.ok) {
@@ -43,16 +54,16 @@ ocrForm.addEventListener("submit", async (event) => {
     const { html } = await response.json();
 
     result.replaceChildren();
+
     const resultHTML = document.createElement("pre");
     resultHTML.textContent = html;
     result.append(resultHTML);
+
     result.insertAdjacentHTML("beforeend", html);
-    const searchableImage = result.querySelector("s-img");
-    searchableImage.alt = "";
-    searchableImage.src = URL.createObjectURL(file);
-    searchableImage.classList.add("mt-4");
+    const svg = result.querySelector("svg");
+    svg.classList.add("mt-4");
   } finally {
     submitButton.disabled = false;
-    submitButton.textContent = "Convert";
+    submitButton.textContent = "Generate";
   }
 });
