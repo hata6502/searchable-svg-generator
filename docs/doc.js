@@ -41,6 +41,7 @@ ocrForm.addEventListener("submit", async (event) => {
         },
         body: JSON.stringify({
           href,
+          alt: "(alt text here)",
           image: dataURL.split(",")[1],
           width: image.naturalWidth,
           height: image.naturalHeight,
